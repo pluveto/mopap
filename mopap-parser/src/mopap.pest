@@ -1,0 +1,58 @@
+file = { section* }
+
+section = { account_section | record_section }
+
+account_section = { "#" ~ KW_ACCOUNT ~ account_subsection* }
+
+      account_subsection = { account_basic_info | account_init_states }
+      
+      account_basic_info = { "##" ~ KW_BASIC_INFO ~ kv_pair * }
+      
+      	kv_pair = { kv_pair_key ~ ": " ~ kv_pair_value }
+        	kv_pair_key = ${ (!(":") ~ ident_char)+ }
+            kv_pair_value = ${ (!("\n" | "\r") ~ ANY)* }
+
+      account_init_states = { "##" ~ KW_INT_STATE ~ account_init_state* }
+
+      account_init_state = { acount_name ~ KW_BALANCE ~ account_balance }
+
+      acount_name = ${ ident_char+ }
+
+      ident_char = _{ !(WHITESPACE) ~ ANY }
+
+      account_balance = { money_amount }
+
+            money_amount = { value ~ currency }
+
+                  value  = { ("+" | "-" | "~" )? ~ (ASCII_DIGIT+ ~ ".")? ~ ASCII_DIGIT+ }
+
+                  currency = { "CNY" | "USD" | "JPY" | "EUR" }
+
+record_section = { "#" ~ KW_RECORD ~ record_subsection*}
+
+record_subsection = { "##" ~ date ~ record_entry*}
+
+	date = ${ year ~ "-" ~ month ~ "-"~ day}
+
+            year = _{ASCII_DIGIT+}
+
+            month = _{ASCII_DIGIT+}
+
+            day = _{ASCII_DIGIT+}
+
+	record_entry = { money_amount ~ acount_name ~ transfer? ~ note }
+    	transfer = { KW_TRANSFER ~ acount_name }
+    	note = { text ~ tags}
+        text = { note_char* }
+        tags = { hashtag* }
+        note_char = _{ !("\n" | "#") ~ ANY }
+        hashtag = ${ "#" ~ (!(" ") ~ note_char)+ }
+
+WHITESPACE = _{ " " | "\t" | "\r" | "\n" }
+KW_ACCOUNT = _{ "账户" | "Account" }
+KW_RECORD = _{ "记录" | "Records" }
+KW_BASIC_INFO = _{ "基本信息" | "Basic Info" }
+KW_INT_STATE = _{ "初始状态" | "Initial State" }
+KW_BALANCE = _{ "余额" | "balance" }
+KW_TRANSFER = _{ "转" | "to" }
+COMMENT = _{ "-- " ~ (!("\n") ~ ANY)* ~ "\n" }
