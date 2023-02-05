@@ -8,8 +8,8 @@ account_section = { "#" ~ KW_ACCOUNT ~ account_subsection* }
       
       account_basic_info = { "##" ~ KW_BASIC_INFO ~ kv_pair * }
       
-      	kv_pair = { kv_pair_key ~ ": " ~ kv_pair_value }
-        	kv_pair_key = ${ (!(":") ~ ident_char)+ }
+      	kv_pair = { kv_pair_key ~ (": "|"：") ~ kv_pair_value }
+        	kv_pair_key = ${ (!(": "|"：") ~ ident_char)+ }
             kv_pair_value = ${ (!("\n" | "\r") ~ ANY)* }
 
       account_init_states = { "##" ~ KW_INT_STATE ~ account_init_state* }
