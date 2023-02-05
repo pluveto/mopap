@@ -1,0 +1,23 @@
+# Account
+
+## Basic Info
+
+	name: default
+	currency: USD
+
+## Initial State
+
+	BOA		balance 1958.52 USD
+
+# Records
+
+## 1999-01-01
+
+	-13.20   USD    BOA    buy plain t-shirts #clothes
+	+1000.00 USD    BOA    salary #salary
+
+## 1999-01-02
+
+	-9.99    USD    BOA    buy a book #books
+	-0.50    USD    BOA    buy a cup of coffee #food
+	-150.23  USD    BOA    a new phone #electronics
